@@ -3,7 +3,7 @@ import SendIcon from '@mui/icons-material/Send'
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward'
 import { useChat } from './useChat'
 import { ChatsDrawer } from './ChatsDrawer'
-import { useEffect, useLayoutEffect, useRef } from 'react'
+import { useState, useEffect, useLayoutEffect, useRef } from 'react'
 import { db } from '@/utils/firebase'
 import { doc, getDoc } from 'firebase/firestore'
 import { useUser } from '@/contexts/userContext'
@@ -14,6 +14,15 @@ export default function Talk() {
   const messageBoxRef = useRef(null)
   const lastMessageRef = useRef(null)
   const prevScrollHeightRef = useRef(null)
+
+  const userMessageBoxRef = useRef(null)
+  const [userMessageBoxHeight, setUserMessageBoxHeight] = useState(0)
+
+  useLayoutEffect(() => {
+    if (userMessageBoxRef.current) {
+      setUserMessageBoxHeight(userMessageBoxRef.current.getBoundingClientRect().height)
+    }
+  }, [])
 
   useEffect(() => {
     const fetchChatHistory = async () => {
@@ -95,7 +104,6 @@ export default function Talk() {
         <Box ref={messageBoxRef} sx={{ overflowY: 'auto' }}>
           <Box
             sx={{
-              position: 'relative',
               bgcolor: 'background.paper',
               px: 2,
               pt: 2,
@@ -108,7 +116,7 @@ export default function Talk() {
           </Box>
         </Box>
 
-        <Box sx={{ p: 2, position: 'relative', margin: '0 auto', maxWidth: '900px', width: '100%' }}>
+        <Box sx={{ p: 2, position: 'relative', margin: '0 auto', maxWidth: '900px', width: '100%' }} ref={userMessageBoxRef}>
           <TextField
             fullWidth
             variant="outlined"
@@ -134,10 +142,11 @@ export default function Talk() {
               ),
             }}
           />
-          <IconButton aria-label="Scroll down" sx={{ position: 'absolute', top: '-40px', right: '16px' }}>
-            <ArrowDownwardIcon />
-          </IconButton>
         </Box>
+
+        <IconButton aria-label="Scroll down" sx={{ position: 'fixed', bottom: `${userMessageBoxHeight}px`, right: '16px' }}>
+          <ArrowDownwardIcon />
+        </IconButton>
       </Box>
     </>
   )
