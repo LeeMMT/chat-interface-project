@@ -1,28 +1,19 @@
-import { TextField, Box, Typography, InputAdornment, IconButton } from '@mui/material'
+import { TextField, Box, InputAdornment, IconButton } from '@mui/material'
 import SendIcon from '@mui/icons-material/Send'
-import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward'
 import { useChat } from './useChat'
 import { ChatsDrawer } from './ChatsDrawer'
-import { useState, useEffect, useLayoutEffect, useRef } from 'react'
+import { useEffect } from 'react'
 import { db } from '@/utils/firebase'
 import { doc, getDoc } from 'firebase/firestore'
 import { useUser } from '@/contexts/userContext'
+import { useScroll } from './useScroll'
+import { ScrollDownBtn } from './ScrollDownBtn'
+import { MessageList } from './MessageList'
 
 export default function Talk() {
   const { chats, selectedChat, setSelectedChat, messages, setMessages, input, handleInputChange, handleSend, createNewChat, deleteChat, loading } = useChat()
+  const { messageBoxRef, lastMessageRef, userMessageBoxRef, userMessageBoxHeight } = useScroll(messages, loading)
   const { user } = useUser()
-  const messageBoxRef = useRef(null)
-  const lastMessageRef = useRef(null)
-  const prevScrollHeightRef = useRef(null)
-
-  const userMessageBoxRef = useRef(null)
-  const [userMessageBoxHeight, setUserMessageBoxHeight] = useState(0)
-
-  useLayoutEffect(() => {
-    if (userMessageBoxRef.current) {
-      setUserMessageBoxHeight(userMessageBoxRef.current.getBoundingClientRect().height)
-    }
-  }, [])
 
   useEffect(() => {
     const fetchChatHistory = async () => {
@@ -44,44 +35,6 @@ export default function Talk() {
     fetchChatHistory()
   }, [selectedChat, user])
 
-  useEffect(() => {
-    // Before messages update, store the previous scroll height
-    if (messageBoxRef.current) {
-      prevScrollHeightRef.current = messageBoxRef.current.scrollHeight
-    }
-  }, [messages])
-
-  useLayoutEffect(() => {
-    if (messageBoxRef.current && lastMessageRef.current) {
-      const clientHeight = messageBoxRef.current.clientHeight
-      const scrollTop = messageBoxRef.current.scrollTop
-      const prevScrollHeight = prevScrollHeightRef.current || 0
-
-      // We need to check whether we were near the bottom before the new message was added.
-      // If we were, we scroll the user.
-      if (loading === false) {
-        messageBoxRef.current.scrollTop = messageBoxRef.current.scrollHeight
-      } else if (prevScrollHeight - scrollTop <= 2 * clientHeight) {
-        lastMessageRef.current?.scrollIntoView({ behavior: 'smooth' })
-      }
-    }
-  }, [messages])
-
-  const messageList = messages.map((message, index) => (
-    <Box
-      key={index}
-      sx={{ display: 'grid', gridTemplateColumns: '64px 1fr', pr: '64px', columnGap: 2, py: 2 }}
-      ref={index === messages.length - 1 ? lastMessageRef : null}
-    >
-      <Typography color={message.role === 'user' ? 'primary' : 'secondary'} textAlign={'right'}>
-        {message.role}:
-      </Typography>
-      <Typography color="text.primary" ml={1}>
-        {message.content}
-      </Typography>
-    </Box>
-  ))
-
   return (
     <>
       <ChatsDrawer
@@ -101,10 +54,9 @@ export default function Talk() {
           gridTemplateRows: '1fr auto',
         }}
       >
-        <Box ref={messageBoxRef} sx={{ overflowY: 'auto' }}>
+        <Box ref={messageBoxRef} sx={{ overflowY: 'auto', overflowX: 'hidden' }}>
           <Box
             sx={{
-              bgcolor: 'background.paper',
               px: 2,
               pt: 2,
               margin: '0 auto',
@@ -112,7 +64,7 @@ export default function Talk() {
               width: '100%',
             }}
           >
-            {messageList}
+            <MessageList messages={messages} lastMessageRef={lastMessageRef} />
           </Box>
         </Box>
 
@@ -144,9 +96,7 @@ export default function Talk() {
           />
         </Box>
 
-        <IconButton aria-label="Scroll down" sx={{ position: 'fixed', bottom: `${userMessageBoxHeight}px`, right: '16px' }}>
-          <ArrowDownwardIcon />
-        </IconButton>
+        <ScrollDownBtn messageBoxRef={messageBoxRef} userMessageBoxHeight={userMessageBoxHeight} lastMessageRef={lastMessageRef} />
       </Box>
     </>
   )
