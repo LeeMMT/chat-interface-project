@@ -1,8 +1,9 @@
-import { TextField, Box, InputAdornment, IconButton } from '@mui/material'
+import { useState, useEffect } from 'react'
+import { AppBar, Toolbar, TextField, Box, InputAdornment, IconButton, useMediaQuery, useTheme } from '@mui/material'
+import DragHandleIcon from '@mui/icons-material/DragHandle'
 import SendIcon from '@mui/icons-material/Send'
 import { useChat } from './useChat'
 import { ChatsDrawer } from './ChatsDrawer'
-import { useEffect } from 'react'
 import { db } from '@/utils/firebase'
 import { doc, getDoc } from 'firebase/firestore'
 import { useUser } from '@/contexts/userContext'
@@ -14,6 +15,14 @@ export default function Talk() {
   const { chats, selectedChat, setSelectedChat, messages, setMessages, input, handleInputChange, handleSend, createNewChat, deleteChat, loading } = useChat()
   const { messageBoxRef, lastMessageRef, userMessageBoxRef, userMessageBoxHeight } = useScroll(messages, loading)
   const { user } = useUser()
+
+  const theme = useTheme()
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'))
+  const [drawerOpen, setDrawerOpen] = useState(!isSmallScreen) // drawer is initially open if not small screen
+
+  useEffect(() => {
+    setDrawerOpen(!isSmallScreen) // update drawer open state when screen size changes
+  }, [isSmallScreen])
 
   useEffect(() => {
     const fetchChatHistory = async () => {
@@ -37,7 +46,21 @@ export default function Talk() {
 
   return (
     <>
+      {isSmallScreen && (
+        <AppBar position="static">
+          <Toolbar>
+            <IconButton edge="start" color="inherit" aria-label="menu" onClick={() => setDrawerOpen(true)}>
+              <DragHandleIcon />
+            </IconButton>
+          </Toolbar>
+        </AppBar>
+      )}
+
       <ChatsDrawer
+        open={drawerOpen}
+        setOpen={setDrawerOpen}
+        variant={isSmallScreen ? 'temporary' : 'permanent'}
+        anchor={isSmallScreen ? 'top' : 'left'}
         chats={chats}
         selectedChat={selectedChat}
         setSelectedChat={setSelectedChat}
@@ -64,7 +87,7 @@ export default function Talk() {
               width: '100%',
             }}
           >
-            <MessageList messages={messages} lastMessageRef={lastMessageRef} />
+            <MessageList messages={messages} lastMessageRef={lastMessageRef} loading={loading} />
           </Box>
         </Box>
 

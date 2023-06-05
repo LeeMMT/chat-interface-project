@@ -39,7 +39,7 @@ const StyledIcon = styled((props) => <props.icon {...props} />)(({ theme }) => (
   },
 }))
 
-export const ChatsDrawer = ({ chats, selectedChat, setSelectedChat, createNewChat, deleteChat, loading }) => {
+export const ChatsDrawer = ({ open, setOpen, variant, anchor, chats, selectedChat, setSelectedChat, createNewChat, deleteChat, loading }) => {
   const chatList = chats.map((chat, index) => (
     <CustomListItem key={index} sx={{ py: 0 }}>
       <CustomListItemButton
@@ -69,8 +69,10 @@ export const ChatsDrawer = ({ chats, selectedChat, setSelectedChat, createNewCha
 
   return (
     <Drawer
-      variant="permanent"
-      anchor="left"
+      open={open}
+      onClose={() => setOpen(false)}
+      variant={variant}
+      anchor={anchor}
       PaperProps={{
         sx: {
           width: 300,
