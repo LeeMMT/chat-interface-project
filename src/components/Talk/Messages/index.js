@@ -1,8 +1,8 @@
+import React, { memo } from 'react'
 import { Box, Typography, Fade } from '@mui/material'
-import Lottie from 'lottie-react'
-import animationData from '@/assets/typing'
+import { TypingLottie } from './TypingLottie'
 
-const MessageWrapper = ({ children, message, isLastMessage, name, lastMessageRef }) => {
+const MessageWrapper = React.memo(({ children, message, isLastMessage, name, lastMessageRef, isSmallScreen }) => {
   return (
     <Fade in={true} timeout={500}>
       <Box
@@ -11,7 +11,7 @@ const MessageWrapper = ({ children, message, isLastMessage, name, lastMessageRef
           position: 'relative',
           display: 'grid',
           gridTemplateColumns: '64px 1fr',
-          pr: '64px',
+          pr: isSmallScreen ? 0 : '64px',
           columnGap: 2,
           py: 4,
           '::before': {
@@ -49,38 +49,25 @@ const MessageWrapper = ({ children, message, isLastMessage, name, lastMessageRef
       </Box>
     </Fade>
   )
-}
+})
 
-export const MessageList = ({ messages, lastMessageRef, loading }) => {
+export default ({ messages, lastMessageRef, loading, isSmallScreen }) => {
   const messageList = messages.map((message, index) => (
-    <MessageWrapper message={message} key={index} isLastMessage={index === messages.length - 1} lastMessageRef={lastMessageRef}>
+    <MessageWrapper message={message} key={index} isLastMessage={index === messages.length - 1} lastMessageRef={lastMessageRef} isSmallScreen={isSmallScreen}>
       <Typography color={message.role === 'user' ? 'primary' : 'secondary'} textAlign={'right'}>
         {message.role}:
       </Typography>
-      <Typography color="text.primary" ml={1}>
-        {message.content}
-      </Typography>
+      <Typography color="text.primary">{message.content}</Typography>
     </MessageWrapper>
   ))
 
   return (
     <>
       {messageList}
-
       {loading && (
         <MessageWrapper name="Assistant">
           <Box sx={{ position: 'relative' }}>
-            <Lottie
-              animationData={animationData}
-              loop={true}
-              style={{
-                position: 'absolute',
-                top: '0',
-                left: '-12px',
-                width: '64px',
-                transform: 'translateY(calc(-50% + 18px))',
-              }}
-            />
+            <TypingLottie />
           </Box>
         </MessageWrapper>
       )}

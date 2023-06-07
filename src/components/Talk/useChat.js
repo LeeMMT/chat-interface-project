@@ -3,6 +3,7 @@ import axios from 'axios'
 import { useUser } from '@/contexts/userContext'
 import { collection, getDocs, doc, getDoc, addDoc, updateDoc, deleteDoc } from 'firebase/firestore'
 import { db } from '@/utils/firebase'
+import { getAnswers, analyzeAnswers, resolveAnswers } from '@/utils/smartPrompt'
 
 export const useChat = () => {
   const { user } = useUser()
@@ -11,6 +12,7 @@ export const useChat = () => {
   const [messages, setMessages] = useState([])
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
+  const [smartMode, setSmartMode] = useState(false)
 
   const fetchChats = async () => {
     if (user) {
@@ -70,8 +72,6 @@ export const useChat = () => {
       //Create and then save first chat
       createNewChat(updatedMessages)
     }
-
-    setLoading(false)
   }
 
   const handleInputChange = (e) => {
@@ -95,37 +95,44 @@ export const useChat = () => {
     // Clear the input field
     setInput('')
 
-    // Prepare the messages for the API request
-    const apiMessages = newMessages.map((message) => {
-      return { role: message.role, content: message.content }
-    })
+    let response = null
 
-    try {
-      const response = await axios.post(
-        'https://api.openai.com/v1/chat/completions',
-        {
-          model: 'gpt-4',
-          messages: apiMessages,
-          max_tokens: 60,
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: 'Bearer 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',
+    if (smartMode) {
+      const answerOptions = await getAnswers(newMessages)
+      const researcherResponse = await analyzeAnswers(newMessages, answerOptions)
+      response = await resolveAnswers(newMessages, researcherResponse.combinedAnswers, researcherResponse.response)
+    } else {
+      try {
+        response = await axios.post(
+          'https://api.openai.com/v1/chat/completions',
+          {
+            model: 'gpt-3.5-turbo',
+            messages: newMessages,
+            max_tokens: 30,
           },
-        }
-      )
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: 'Bearer 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',
+            },
+          }
+        )
 
-      console.log(response)
-
-      //Add AI response to chat history
-      const updatedMessages = [...newMessages, { role: 'assistant', content: response.data.choices[0].message.content.trim() }]
-
-      setMessages(updatedMessages)
-      saveChat(updatedMessages)
-    } catch (error) {
-      console.error('Error while calling OpenAI API:', error)
+        console.log(response)
+        response = response.data.choices[0].message.content.trim()
+      } catch (error) {
+        console.error('Error while calling OpenAI API:', error)
+      }
     }
+
+    //Add AI response to chat history
+    const updatedMessages = [...newMessages, { role: 'assistant', content: response }]
+
+    setMessages(updatedMessages)
+    setTimeout(() => {
+      setLoading(false)
+    }, 0)
+    saveChat(updatedMessages)
   }
 
   const deleteChat = async (chatDocId) => {
@@ -140,5 +147,19 @@ export const useChat = () => {
     }
   }
 
-  return { chats, selectedChat, setSelectedChat, messages, setMessages, input, handleInputChange, handleSend, createNewChat, deleteChat, loading }
+  return {
+    chats,
+    selectedChat,
+    setSelectedChat,
+    messages,
+    setMessages,
+    input,
+    handleInputChange,
+    handleSend,
+    createNewChat,
+    deleteChat,
+    loading,
+    smartMode,
+    setSmartMode,
+  }
 }

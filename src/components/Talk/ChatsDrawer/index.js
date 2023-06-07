@@ -1,14 +1,18 @@
-import { Drawer, List, ListItem, IconButton, ListItemButton, ListItemText, Button, Typography } from '@mui/material'
+import { Drawer, List, ListItem, IconButton, ListItemButton, ListItemText, Button } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add'
 import ChatIcon from '@mui/icons-material/Chat'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
 import { styled } from '@mui/system'
 import { UserMenu } from './UserMenu'
 
-const CustomListItem = styled(ListItem)(({ theme }) => ({
+const CustomListItem = styled(ListItem, {
+  shouldForwardProp: (prop) => prop !== 'isSelected',
+})(({ theme, isSelected }) => ({
   borderRadius: '8px',
+  backgroundColor: isSelected ? theme.palette.primary.main : 'transparent',
+  color: isSelected ? theme.palette.primary.contrastText : 'inherit',
   '&:hover': {
-    backgroundColor: 'hsl(255, 42%, 25%)',
+    backgroundColor: isSelected ? theme.palette.primary.main : 'hsl(255, 42%, 25%)',
   },
   '&:hover .delete-button': {
     visibility: 'visible',
@@ -39,9 +43,9 @@ const StyledIcon = styled((props) => <props.icon {...props} />)(({ theme }) => (
   },
 }))
 
-export const ChatsDrawer = ({ open, setOpen, variant, anchor, chats, selectedChat, setSelectedChat, createNewChat, deleteChat, loading }) => {
+export default ({ open, setOpen, isSmallScreen, chats, selectedChat, setSelectedChat, createNewChat, deleteChat, loading }) => {
   const chatList = chats.map((chat, index) => (
-    <CustomListItem key={index} sx={{ py: 0 }}>
+    <CustomListItem key={index} sx={{ py: 0 }} isSelected={selectedChat && selectedChat.id === chat.id}>
       <CustomListItemButton
         disableRipple
         onClick={() => {
@@ -71,11 +75,11 @@ export const ChatsDrawer = ({ open, setOpen, variant, anchor, chats, selectedCha
     <Drawer
       open={open}
       onClose={() => setOpen(false)}
-      variant={variant}
-      anchor={anchor}
+      variant={isSmallScreen ? 'temporary' : 'permanent'}
+      anchor="left"
       PaperProps={{
         sx: {
-          width: 300,
+          width: isSmallScreen ? 'calc(100% - 64px)' : '300px',
           padding: 1,
           bgcolor: 'primary.dark',
           display: 'flex',
@@ -109,7 +113,7 @@ export const ChatsDrawer = ({ open, setOpen, variant, anchor, chats, selectedCha
 
       <List sx={{ flexGrow: 1 }}>{chatList}</List>
 
-      <UserMenu />
+      <UserMenu isSmallScreen={isSmallScreen} />
     </Drawer>
   )
 }

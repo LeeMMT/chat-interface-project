@@ -24,7 +24,7 @@ export const ScrollDownBtn = ({ messageBoxRef, userMessageBoxHeight, lastMessage
 
   return (
     <Fade in={trigger}>
-      <IconButton aria-label="Scroll down" onClick={scrollToBottom} sx={{ position: 'fixed', bottom: `${userMessageBoxHeight + 8}px`, right: '32px' }}>
+      <IconButton aria-label="Scroll down" onClick={scrollToBottom} sx={{ position: 'fixed', bottom: `${userMessageBoxHeight + 8}px`, right: ['8px', '16px'] }}>
         <ArrowDownwardIcon />
       </IconButton>
     </Fade>

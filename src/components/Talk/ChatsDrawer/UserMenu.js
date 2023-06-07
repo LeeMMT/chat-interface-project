@@ -7,7 +7,7 @@ import { signUserOut } from '@/utils/auth'
 import { useTheme } from '@mui/material/styles'
 import { useUser } from '@/contexts/userContext'
 
-export const UserMenu = () => {
+export const UserMenu = ({ isSmallScreen }) => {
   const { user } = useUser()
   const router = useRouter()
   const [anchorEl, setAnchorEl] = useState(null)
@@ -69,7 +69,7 @@ export const UserMenu = () => {
           sx: {
             marginLeft: '-8px',
             marginTop: '-8px',
-            width: '284px',
+            width: isSmallScreen ? 'calc(100% - 80px)' : '284px',
             backgroundColor: theme.palette.primary.light,
             color: theme.palette.primary.contrastText,
           },
