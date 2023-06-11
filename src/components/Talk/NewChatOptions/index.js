@@ -59,10 +59,6 @@ const ChatOption = ({ chatMode, onClick }) => (
 export default () => {
   const [selectedChatMode, setSelectedChatMode] = useState(false)
 
-  useEffect(() => {
-    console.log(selectedChatMode)
-  }, [selectedChatMode])
-
   const chatModes = [
     {
       title: 'Oracle',
@@ -91,7 +87,7 @@ export default () => {
   }
 
   return (
-    <Box pt={3}>
+    <Box pt={4}>
       {!selectedChatMode && (
         <Grid container spacing={3}>
           {chatModes.map((chatMode, index) => (
@@ -100,11 +96,7 @@ export default () => {
         </Grid>
       )}
 
-      {selectedChatMode && selectedChatMode.title === 'Character' && (
-        <Box>
-          <CharacterOptions handleGoBack={handleGoBack} />
-        </Box>
-      )}
+      {selectedChatMode && selectedChatMode.title === 'Character' && <CharacterOptions handleGoBack={handleGoBack} />}
     </Box>
   )
 }
