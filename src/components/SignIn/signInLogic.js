@@ -25,7 +25,7 @@ export const useSignInLogic = () => {
     if (result.status) {
       console.log(result)
       //Signed in
-      router.push('/talk')
+      router.push('/')
       setUser({
         uid: result.user.uid,
         email: result.user.email,

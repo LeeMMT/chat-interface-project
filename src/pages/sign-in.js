@@ -9,7 +9,7 @@ export default () => {
 
   useEffect(() => {
     if (user) {
-      router.push('/talk')
+      router.push('/')
     }
   }, [user])
 

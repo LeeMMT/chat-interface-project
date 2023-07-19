@@ -38,7 +38,7 @@ export const useSignUpLogic = () => {
         setAlertOpen(true)
       } else {
         //Signed in
-        router.push('/talk')
+        router.push('/')
         addUser(signUpSuccess.uid, { email: data.email })
       }
     } catch (error) {
