@@ -38,7 +38,7 @@ async function signUserOut(router) {
   try {
     await signOut(auth)
     console.log(auth)
-    router.push('/')
+    router.push('/sign-in')
     console.log('User signed out')
   } catch (error) {
     console.error('Error signing out:', error)
