@@ -5,9 +5,9 @@ import { signUp } from '@/utils/auth'
 import { getFirestore, doc, setDoc } from 'firebase/firestore'
 
 export const useSignUpLogic = () => {
+  const router = useRouter()
   const [alertOpen, setAlertOpen] = useState(false)
   const [signUpError, setSignUpError] = useState('')
-  const router = useRouter()
 
   const {
     register,

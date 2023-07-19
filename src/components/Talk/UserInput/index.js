@@ -1,5 +1,6 @@
 import { Box, Paper, TextField, InputAdornment, IconButton } from '@mui/material'
-import { WandIcon } from './WandIcon'
+//import { WandIcon } from './WandIcon'
+import SendIcon from '@mui/icons-material/Send'
 
 export default ({ inputValue, userMessageBoxRef, handleInputChange, handleSend }) => {
   return (
@@ -25,7 +26,9 @@ export default ({ inputValue, userMessageBoxRef, handleInputChange, handleSend }
                   edge="end"
                   disabled={inputValue.trim() === ''} // disable the button if input is empty
                 >
-                  <WandIcon disabled={inputValue.trim() === ''} />
+                  {/* <WandIcon disabled={inputValue.trim() === ''} />
+                  < */}
+                  <SendIcon />
                 </IconButton>
               </InputAdornment>
             ),

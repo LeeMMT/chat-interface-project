@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react'
 import { AppBar, Typography, Toolbar, Box, IconButton, useMediaQuery, useTheme } from '@mui/material'
 import MenuIcon from '@mui/icons-material/Menu'
 import AddIcon from '@mui/icons-material/Add'
-//import SendIcon from '@mui/icons-material/Send'
 import { useChat } from '@/components/Talk/useChat'
 import { db } from '@/utils/firebase'
 import { doc, getDoc } from 'firebase/firestore'
@@ -14,7 +13,7 @@ import Messages from '@/components/Talk/Messages'
 import { SmartModeIcon } from '@/components/Talk/SmartModeIcon'
 import UserInput from '@/components/Talk/UserInput'
 import ChatsDrawer from '@/components/Talk/ChatsDrawer'
-import NewChatOptions from '@/components/Talk/NewChatOptions'
+//import NewChatOptions from '@/components/Talk/NewChatOptions'
 
 export default function Home() {
   const {
@@ -35,6 +34,7 @@ export default function Home() {
   const { messageBoxRef, lastMessageRef, userMessageBoxRef, userMessageBoxHeight } = useScroll(messages, loading)
 
   const { user } = useUser()
+  const [apiKey, setApiKey] = useState('')
   const theme = useTheme()
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'))
 
@@ -63,6 +63,10 @@ export default function Home() {
     }
     fetchChatHistory()
   }, [selectedChat, user])
+
+  const updateApiKey = (key) => {
+    setApiKey(key)
+  }
 
   return (
     <>
@@ -130,7 +134,7 @@ export default function Home() {
               width: '100%',
             }}
           >
-            {messages.length < 1 && <NewChatOptions />}
+            {/* {messages.length < 1 && <NewChatOptions />} */}
             <Messages messages={messages} lastMessageRef={lastMessageRef} loading={loading} isSmallScreen={isSmallScreen} />
           </Box>
         </Box>
