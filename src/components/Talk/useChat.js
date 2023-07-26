@@ -82,6 +82,12 @@ export const useChat = () => {
     //Prevents user from sending an empty message
     if (input.trim() === '') return
 
+    //Prevents api call if user hasn't set their api key
+    if (!user.apiKey) {
+      console.log(user)
+      return
+    }
+
     //Prevent user sending subsequent messages before receiving a response
     if (loading) return
     setLoading(true)
