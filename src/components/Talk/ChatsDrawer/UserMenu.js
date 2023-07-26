@@ -23,6 +23,10 @@ export const UserMenu = ({ isSmallScreen }) => {
 
   const open = Boolean(anchorEl)
 
+  const signOutCallback = () => {
+    signUserOut(router)
+  }
+
   return (
     <>
       {user && (
@@ -83,7 +87,13 @@ export const UserMenu = ({ isSmallScreen }) => {
           My Plan
         </MenuItem>
         <Divider style={{ margin: 0 }} />
-        <MenuItem onClick={() => signUserOut(router)} sx={{ py: 1 }}>
+        <MenuItem
+          onClick={() => {
+            handleClose()
+            setTimeout(signOutCallback, 0)
+          }}
+          sx={{ py: 1 }}
+        >
           Sign Out
         </MenuItem>
       </Popover>
