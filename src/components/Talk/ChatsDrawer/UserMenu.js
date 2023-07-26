@@ -2,10 +2,12 @@ import { useState } from 'react'
 import { Avatar, Button, Typography, MenuItem, Divider } from '@mui/material'
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz'
 import Popover from '@mui/material/Popover'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { signUserOut } from '@/utils/auth'
 import { useTheme } from '@mui/material/styles'
 import { useUser } from '@/contexts/userContext'
+import { palette } from '@mui/system'
 
 export const UserMenu = ({ isSmallScreen }) => {
   const { user } = useUser()
@@ -79,7 +81,7 @@ export const UserMenu = ({ isSmallScreen }) => {
           },
         }}
       >
-        <MenuItem onClick={handleClose} sx={{ py: 1 }}>
+        <MenuItem component={Link} href="/settings" onClick={handleClose} sx={{ py: 1 }}>
           Settings
         </MenuItem>
         <Divider style={{ margin: 0 }} />

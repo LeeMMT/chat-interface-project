@@ -18,12 +18,13 @@ export default () => {
   const db = getFirestore()
 
   const onSubmit = async (data) => {
-    const { key } = data
+    console.log('Form data:', data)
+    const { apiKey } = data
 
     try {
       const userDoc = doc(db, 'users', user.uid)
-      await updateDoc(userDoc, { apiKey: key })
-      console.log('API key added: ', key)
+      await updateDoc(userDoc, { apiKey: apiKey })
+      console.log('API key added: ', apiKey)
     } catch (error) {
       console.error('Error adding API key: ', error)
     }
@@ -39,7 +40,7 @@ export default () => {
         helperText={'Paste your OpenAI API key here'}
         required
         fullWidth
-        name="API key"
+        name="apiKey"
         label="API key"
         id="api-key"
       />

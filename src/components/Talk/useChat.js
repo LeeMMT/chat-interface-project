@@ -113,7 +113,7 @@ export const useChat = () => {
           {
             headers: {
               'Content-Type': 'application/json',
-              Authorization: 'Bearer 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',
+              Authorization: `Bearer ${user.apiKey}`,
             },
           }
         )
