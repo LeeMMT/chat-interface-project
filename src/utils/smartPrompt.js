@@ -15,7 +15,7 @@ const getAnswers = async (messages) => {
       {
         headers: {
           'Content-Type': 'application/json',
-          Authorization: 'Bearer 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',
+          Authorization: 'Bearer redacted',
         },
       }
     )
@@ -57,7 +57,7 @@ const analyzeAnswers = async (messages, answers) => {
       {
         headers: {
           'Content-Type': 'application/json',
-          Authorization: 'Bearer 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',
+          Authorization: 'Bearer redacted',
         },
       }
     )
@@ -92,7 +92,7 @@ const resolveAnswers = async (messages, combinedAnswers, analysis) => {
       {
         headers: {
           'Content-Type': 'application/json',
-          Authorization: 'Bearer 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',
+          Authorization: 'Bearer redacted',
         },
       }
     )
