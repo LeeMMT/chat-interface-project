@@ -7,7 +7,6 @@ import { getAnswers, analyzeAnswers, resolveAnswers } from '@/utils/smartPrompt'
 
 export const useChat = (apiKey) => {
   const { user } = useUser()
-  console.log('user is', user)
   const [chats, setChats] = useState([])
   const [selectedChat, setSelectedChat] = useState(null)
   const [messages, setMessages] = useState([])
@@ -84,9 +83,7 @@ export const useChat = (apiKey) => {
     if (input.trim() === '') return
 
     //Prevents api call if user hasn't set their api key
-    console.log(user)
     if (!user.apiKey) {
-      console.log('No api key set')
       showSnackbarError('Enter your Open AI API key on the settings page to use chat', 'info')
       return
     }
@@ -127,7 +124,6 @@ export const useChat = (apiKey) => {
           }
         )
 
-        console.log(response)
         response = response.data.choices[0].message.content.trim()
       } catch (error) {
         console.error('Error while calling OpenAI API:', error)
