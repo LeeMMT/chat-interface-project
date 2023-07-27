@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form'
 import { signIn } from '@/utils/auth'
 import { useUser } from '@/contexts/userContext'
 import { db } from '@/utils/firebase'
-import { doc, getDoc } from 'firebase/firestore'
+import { getDoc, doc } from 'firebase/firestore'
 
 export const useSignInLogic = () => {
   const { user, setUser } = useUser()
@@ -27,25 +27,11 @@ export const useSignInLogic = () => {
     if (result.status) {
       //Signed in
       router.push('/')
-      //Get api key from user doc if it exists and add it to user obj
-      let userApiKey = ''
-
-      try {
-        const userDocRef = await getDoc(doc(db, 'users', result.user.uid))
-        const userDocData = userDocRef.data()
-        if (userDocData.apiKey) {
-          userApiKey = userDocData.apiKey
-        }
-        console.log(userDocData)
-      } catch (error) {
-        console.error('Error getting apiKey:', error)
-      }
 
       setUser({
         uid: result.user.uid,
         email: result.user.email,
         photoURL: result.user.photoURL,
-        apiKey: userApiKey,
       })
     } else {
       //Error

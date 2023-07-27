@@ -5,8 +5,9 @@ import { collection, getDocs, doc, getDoc, addDoc, updateDoc, deleteDoc } from '
 import { db } from '@/utils/firebase'
 import { getAnswers, analyzeAnswers, resolveAnswers } from '@/utils/smartPrompt'
 
-export const useChat = () => {
+export const useChat = (apiKey) => {
   const { user } = useUser()
+  console.log('user is', user)
   const [chats, setChats] = useState([])
   const [selectedChat, setSelectedChat] = useState(null)
   const [messages, setMessages] = useState([])
@@ -83,8 +84,10 @@ export const useChat = () => {
     if (input.trim() === '') return
 
     //Prevents api call if user hasn't set their api key
+    console.log(user)
     if (!user.apiKey) {
-      console.log(user)
+      console.log('No api key set')
+      showSnackbarError('Enter your Open AI API key on the settings page to use chat', 'info')
       return
     }
 
@@ -128,6 +131,10 @@ export const useChat = () => {
         response = response.data.choices[0].message.content.trim()
       } catch (error) {
         console.error('Error while calling OpenAI API:', error)
+        //Set snackbar appropriately here
+        showSnackbarError(error.response.data.error.message, 'error')
+        setLoading(false)
+        return
       }
     }
 
@@ -153,6 +160,30 @@ export const useChat = () => {
     }
   }
 
+  // State to control Snackbar visibility
+  const [snackbarOpen, setSnackbarOpen] = useState(false)
+
+  //State to control severity prop of snackbar
+  const [snackbarSeverity, setSnackbarSeverity] = useState(null)
+
+  // State to store the error message
+  const [snackbarMessage, setSnackbarMessage] = useState('')
+
+  // Function to display the error message
+  const showSnackbarError = (msg, severity) => {
+    setSnackbarSeverity(severity)
+    setSnackbarMessage(msg)
+    setSnackbarOpen(true)
+  }
+
+  // Function to close the Snackbar
+  const handleSnackbarClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return
+    }
+    setSnackbarOpen(false)
+  }
+
   return {
     chats,
     selectedChat,
@@ -167,5 +198,9 @@ export const useChat = () => {
     loading,
     smartMode,
     setSmartMode,
+    snackbarOpen,
+    snackbarSeverity,
+    snackbarMessage,
+    handleSnackbarClose,
   }
 }

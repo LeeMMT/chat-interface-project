@@ -25,6 +25,13 @@ export default () => {
       const userDoc = doc(db, 'users', user.uid)
       await updateDoc(userDoc, { apiKey: apiKey })
       console.log('API key added: ', apiKey)
+
+      //Explicitely update user state, so that the api key is immediatel available across the application
+      setUser((prevUser) => ({
+        ...prevUser,
+        apiKey,
+      }))
+      router.push('/')
     } catch (error) {
       console.error('Error adding API key: ', error)
     }

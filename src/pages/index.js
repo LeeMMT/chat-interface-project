@@ -1,6 +1,7 @@
 import Head from 'next/head'
 import { useState, useEffect } from 'react'
-import { AppBar, Typography, Toolbar, Box, IconButton, useMediaQuery, useTheme } from '@mui/material'
+import { AppBar, Typography, Toolbar, Box, IconButton, useMediaQuery, useTheme, Snackbar, Alert } from '@mui/material'
+import CloseIcon from '@mui/icons-material/Close'
 import MenuIcon from '@mui/icons-material/Menu'
 import AddIcon from '@mui/icons-material/Add'
 import { useChat } from '@/components/Talk/useChat'
@@ -16,6 +17,8 @@ import ChatsDrawer from '@/components/Talk/ChatsDrawer'
 //import NewChatOptions from '@/components/Talk/NewChatOptions'
 
 export default function Home() {
+  const { user } = useUser()
+
   const {
     chats,
     selectedChat,
@@ -30,11 +33,13 @@ export default function Home() {
     loading,
     smartMode,
     setSmartMode,
+    snackbarOpen,
+    snackbarSeverity,
+    snackbarMessage,
+    handleSnackbarClose,
   } = useChat()
   const { messageBoxRef, lastMessageRef, userMessageBoxRef, userMessageBoxHeight } = useScroll(messages, loading)
 
-  const { user } = useUser()
-  const [apiKey, setApiKey] = useState('')
   const theme = useTheme()
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'))
 
@@ -64,10 +69,6 @@ export default function Home() {
     fetchChatHistory()
   }, [selectedChat, user])
 
-  const updateApiKey = (key) => {
-    setApiKey(key)
-  }
-
   return (
     <>
       <Head>
@@ -87,9 +88,9 @@ export default function Home() {
               {selectedChat ? selectedChat.name : null}
             </Typography>
 
-            <IconButton onClick={() => setSmartMode(!smartMode)}>
+            {/* <IconButton onClick={() => setSmartMode(!smartMode)}>
               <SmartModeIcon smartMode={smartMode} />
-            </IconButton>
+            </IconButton> */}
 
             <IconButton
               edge="end"
@@ -143,6 +144,27 @@ export default function Home() {
 
         <ScrollDownBtn messageBoxRef={messageBoxRef} userMessageBoxHeight={userMessageBoxHeight} lastMessageRef={lastMessageRef} />
       </Box>
+
+      <Snackbar
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'center',
+        }}
+        open={snackbarOpen}
+        autoHideDuration={6000} // Adjust duration as needed
+        onClose={handleSnackbarClose}
+        action={
+          <>
+            <IconButton size="small" aria-label="close" color="inherit" onClick={handleSnackbarClose}>
+              <CloseIcon fontSize="small" />
+            </IconButton>
+          </>
+        }
+      >
+        <Alert onClose={handleSnackbarClose} severity={snackbarSeverity} sx={{ width: '100%' }}>
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </>
   )
 }
