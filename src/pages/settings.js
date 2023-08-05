@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { useUser } from '@/contexts/userContext'
 import { useForm } from 'react-hook-form'
@@ -16,6 +17,12 @@ export default () => {
   } = useForm()
 
   const db = getFirestore()
+
+  useEffect(() => {
+    if (!user) {
+      router.push('/sign-in')
+    }
+  }, [user])
 
   const onSubmit = async (data) => {
     const { apiKey } = data

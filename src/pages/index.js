@@ -1,5 +1,6 @@
 import Head from 'next/head'
 import { useState, useEffect } from 'react'
+import { useRouter } from 'next/router'
 import { AppBar, Typography, Toolbar, Box, IconButton, useMediaQuery, useTheme, Snackbar, Alert } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
 import MenuIcon from '@mui/icons-material/Menu'
@@ -17,6 +18,7 @@ import ChatsDrawer from '@/components/Talk/ChatsDrawer'
 //import NewChatOptions from '@/components/Talk/NewChatOptions'
 
 export default function Home() {
+  const router = useRouter()
   const { user } = useUser()
 
   const {
@@ -44,6 +46,12 @@ export default function Home() {
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'))
 
   const [drawerOpen, setDrawerOpen] = useState(!isSmallScreen) // drawer is initially open if not small screen
+
+  useEffect(() => {
+    if (!user) {
+      router.push('/sign-in')
+    }
+  }, [user])
 
   useEffect(() => {
     setDrawerOpen(!isSmallScreen) // update drawer open state when screen size changes

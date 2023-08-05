@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "predeploy": "next build && next export",
-    "deploy": "gh-pages -d out"
+    "deploy": "touch ./out/.nojekyll && gh-pages -d out -t true"
   },
   "dependencies": {
     "@emotion/react": "^11.11.0",
@@ -25,7 +25,8 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-hook-form": "^7.44.2",
-    "react-transition-group": "^4.4.5"
+    "react-transition-group": "^4.4.5",
+    "touch-cli": "^0.0.1"
   },
   "devDependencies": {
     "gh-pages": "^5.0.0"
