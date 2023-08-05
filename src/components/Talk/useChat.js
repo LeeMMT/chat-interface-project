@@ -114,7 +114,6 @@ export const useChat = (apiKey) => {
           {
             model: 'gpt-3.5-turbo',
             messages: newMessages,
-            max_tokens: 30,
           },
           {
             headers: {
