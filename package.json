@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "predeploy": "next build && next export",
+    "predeploy": "NODE_ENV=production next build && next export",
     "deploy": "touch ./out/.nojekyll && gh-pages -d out -t true"
   },
   "dependencies": {
