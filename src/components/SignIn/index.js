@@ -8,7 +8,7 @@ import Grid from '@mui/material/Grid'
 import Box from '@mui/material/Box'
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import Typography from '@mui/material/Typography'
-import { Collapse, Alert } from '@mui/material'
+import { Collapse, Alert, MenuItem } from '@mui/material'
 import Container from '@mui/material/Container'
 import { useSignInLogic } from './signInLogic'
 
@@ -94,7 +94,7 @@ export default function SignIn() {
 
           <Grid container justifyContent="center">
             <Grid item>
-              <Link href="/sign-up" variant="body2">
+              <Link href="/chat-interface-project/sign-up" variant="body2">
                 Don't have an account yet? Sign up now
               </Link>
             </Grid>
