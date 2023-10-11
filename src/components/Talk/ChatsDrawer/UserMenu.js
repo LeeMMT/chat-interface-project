@@ -7,7 +7,6 @@ import { useRouter } from 'next/router'
 import { signUserOut } from '@/utils/auth'
 import { useTheme } from '@mui/material/styles'
 import { useUser } from '@/contexts/userContext'
-import { palette } from '@mui/system'
 
 export const UserMenu = ({ isSmallScreen }) => {
   const { user } = useUser()

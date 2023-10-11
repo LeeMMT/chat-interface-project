@@ -1,38 +1,16 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+This project is a GPT 3.5 turbo powered chat interface, designed with the intent to show capability in using a vareity of technologies, such as Next JS and Firebase. For the design I have been heavily inspired by ChatGPT's UI, and I have used Material UI to bring it to life.
 
-## Getting Started
+Features:
 
-First, run the development server:
+- Add your own API key to use
+- Registration and user authentication set up using firebase
+- The chat window scrolls when a new message is recieved to ensure ease of use, unless user has scrolled far enough up (in which case user is likely reading prior messages)
+- Can create seperate chats
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
+The project has little utility in the real world, as it offers no new or novel features you would like for a "GPT wrapper" app to have to be considered useful. The project is intended as a demosntration in capability of familiarty with a multitude of technologies and libraries, as well as showing a basic understanding of design principles and user experience.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Loose ends:
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+I don't intend to work on this project any further, but if I were to continue I would implement solutions for the following:
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
-
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
-
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- Token limit; there are no guards in place to prevent a chat from exceeding the token limit for the API if it gets too big. A simple fix would likely involve simply removing the least amount of characters or messages from the message hsitory array when such an error is encountered, and resending the request to the API endpoint
